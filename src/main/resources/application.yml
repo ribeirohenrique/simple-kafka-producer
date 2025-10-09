@@ -1,33 +1,37 @@
+# Níveis de Log para depuração, conforme solicitado e recomendado na documentação
+#logging:
+#  level:
+#    org.apache.kafka.common.security: DEBUG
+#    org.apache.kafka.clients: DEBUG
+
 spring:
   kafka:
-    # Atualizado com a nova URL do bootstrap
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
     properties:
-      # --- Configurações de Segurança ---
+      # Conforme a documentação: https://docs.confluent.io/cloud/current/security/authenticate/workload-identities/identity-providers/oauth/clients/java-clients.html
       security.protocol: SASL_SSL
       sasl.mechanism: OAUTHBEARER
-      schema.registry.url: ${SCHEMA_REGISTRY_URL} # Mantido do seu original
-
-      # --- Configuração OAUTHBEARER Padrão (Substituído) ---
-      # 1. Aponta para o Callback Handler padrão do Kafka
       sasl.login.callback.handler.class: org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginCallbackHandler
-
-      # 2. A URL do endpoint de token é definida separadamente
       sasl.oauthbearer.token.endpoint.url: ${OKTA_TOKEN_ENDPOINT_URL}
-      sasl.oauthbearer.allowed.urls: ${OKTA_TOKEN_ENDPOINT_URL}
 
-      # 3. Configuração JAAS com as credenciais e extensões do Confluent Cloud
       sasl.jaas.config: >-
         org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required
         clientId='${KAFKA_CLIENT_ID}'
         scope='${OKTA_SCOPE}'
         clientSecret='${KAFKA_CLIENT_SECRET}'
-        extension_logicalCluster='${CONFLUENT_LOGICAL_CLUSTER_ID}'
-        extension_identityPoolId='${CONFLUENT_IDENTITY_POOL_ID}';
+        extension_logicalCluster='${CONFLUENT_LOGICAL_CLUSTER_ID}';
 
-      # --- Propriedades restantes (Mantidas do seu original) ---
+      schema.registry.url: ${SCHEMA_REGISTRY_URL}
+      bearer.auth.credentials.source: SASL_OAUTHBEARER_INHERIT
+      bearer.auth.logical.cluster: ${SCHEMA_REGISTRY_CLUSTER_ID}
+      bearer.auth.identity.pool.id: ${CONFLUENT_IDENTITY_POOL_ID}
+
       auto.register.schemas: false
       avro.remove.java.properties: true
+      sasl.login.connect.timeout.ms: 10000
+      sasl.login.read.timeout.ms: 10000
+      sasl.login.retry.backoff.ms: 100
+      sasl.login.retry.backoff.max.ms: 10000

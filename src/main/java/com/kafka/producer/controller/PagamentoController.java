@@ -40,12 +40,12 @@ public class PagamentoController {
 
             // Envia para o serviço
             producerService.enviarMensagem(pagamento);
-
-            redirectAttributes.addFlashAttribute("successMessage", "Mensagem enviada com sucesso!");
-            logger.info("JSON recebido e processado com sucesso.");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Erro ao processar JSON: " + e.getMessage());
             logger.error("Falha ao processar JSON do formulário: {}", mensagemJson, e);
+        } finally {
+            redirectAttributes.addFlashAttribute("successMessage", "Mensagem enviada com sucesso!");
+            logger.info("JSON recebido e processado com sucesso.");
         }
         return "redirect:/";
     }
