@@ -11,11 +11,9 @@ import org.springframework.stereotype.Service;
 public class PagamentoProducerService {
 
     private static final Logger logger = LoggerFactory.getLogger(PagamentoProducerService.class);
-
+    private final KafkaTemplate<String, Pagamento> kafkaTemplate;
     @Value("${app.kafka.topic}")
     private String topic;
-
-    private final KafkaTemplate<String, Pagamento> kafkaTemplate;
 
     public PagamentoProducerService(KafkaTemplate<String, Pagamento> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;

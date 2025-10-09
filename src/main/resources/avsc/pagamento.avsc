@@ -3,9 +3,22 @@
   "type": "record",
   "name": "Pagamento",
   "fields": [
-    { "name": "id", "type": "string" },
-    { "name": "valor", "type": "double" },
-    { "name": "destinatario", "type": "string" },
-    { "name": "timestamp", "type": "long", "logicalType": "timestamp-millis" }
+    {
+      "name": "id",
+      "type": "string"
+    },
+    {
+      "name": "valor",
+      "type": "double"
+    },
+    {
+      "name": "destinatario",
+      "type": "string"
+    },
+    {
+      "name": "timestamp",
+      "type": "long",
+      "logicalType": "timestamp-millis"
+    }
   ]
 }

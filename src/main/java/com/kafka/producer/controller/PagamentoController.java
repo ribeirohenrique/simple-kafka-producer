@@ -1,7 +1,7 @@
 package com.kafka.producer.controller;
 
-import com.kafka.producer.model.Pagamento;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kafka.producer.model.Pagamento;
 import com.kafka.producer.service.PagamentoProducerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ public class PagamentoController {
         try {
             // Converte a string JSON para o nosso objeto Pagamento (gerado pelo Avro)
             Pagamento pagamento = objectMapper.readValue(mensagemJson, Pagamento.class);
-            
+
             // Adiciona o timestamp atual
             pagamento.setTimestamp(System.currentTimeMillis());
 
