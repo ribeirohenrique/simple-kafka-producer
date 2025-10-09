@@ -1,33 +1,20 @@
 spring:
+  output:
+    ansi:
+      enabled: ALWAYS   # 🌈 Habilita cores no console
+
+# ============================================================
+# 🔧 Configurações do Aplicativo
+# ============================================================
+app:
   kafka:
-    # Atualizado com a nova URL do bootstrap
-    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
-    properties:
-      # --- Configurações de Segurança ---
-      security.protocol: SASL_SSL
-      sasl.mechanism: OAUTHBEARER
-      schema.registry.url: ${SCHEMA_REGISTRY_URL} # Mantido do seu original
+    topic: pagamentos-topic
 
-      # --- Configuração OAUTHBEARER Padrão (Substituído) ---
-      # 1. Aponta para o Callback Handler padrão do Kafka
-      sasl.login.callback.handler.class: org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginCallbackHandler
-
-      # 2. A URL do endpoint de token é definida separadamente
-      sasl.oauthbearer.token.endpoint.url: ${OKTA_TOKEN_ENDPOINT_URL}
-      sasl.oauthbearer.allowed.urls: ${OKTA_TOKEN_ENDPOINT_URL}
-
-      # 3. Configuração JAAS com as credenciais e extensões do Confluent Cloud
-      sasl.jaas.config: >-
-        org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required
-        clientId='${KAFKA_CLIENT_ID}'
-        scope='${OKTA_SCOPE}'
-        clientSecret='${KAFKA_CLIENT_SECRET}'
-        extension_logicalCluster='${CONFLUENT_LOGICAL_CLUSTER_ID}'
-        extension_identityPoolId='${CONFLUENT_IDENTITY_POOL_ID}';
-
-      # --- Propriedades restantes (Mantidas do seu original) ---
-      auto.register.schemas: false
-      avro.remove.java.properties: true
+# ============================================================
+# 🪵 Logging
+# ============================================================
+logging:
+  level:
+    root: INFO
+    org.apache.kafka: WARN
+    org.springframework.kafka: DEBUG

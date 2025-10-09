@@ -5,7 +5,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class PagamentoProducerService {
@@ -20,13 +23,14 @@ public class PagamentoProducerService {
     }
 
     public void enviarMensagem(Pagamento pagamento) {
-        try {
-            // O KafkaTemplate é tipado, então ele espera um objeto Pagamento.
-            // A serialização para Avro é feita automaticamente pelo KafkaAvroSerializer.
-            kafkaTemplate.send(topic, pagamento.getId(), pagamento);
-            logger.info("Mensagem de pagamento enviada com sucesso para o tópico {}: {}", topic, pagamento);
-        } catch (Exception e) {
-            logger.error("Erro ao enviar mensagem de pagamento: {}", pagamento, e);
-        }
+        CompletableFuture<SendResult<String, Pagamento>> cFuture = kafkaTemplate.send(topic, pagamento);
+        cFuture.whenComplete((result, ex) -> {
+            if (ex == null) {
+                logger.info("Sent event:[{}] with offset:[{}]", pagamento, result.getRecordMetadata().offset());
+            } else {
+                logger.error("Unable to send event:[{}] due to:{}", pagamento, ex.getMessage());
+                throw new RuntimeException("Error ao enviar mensagem");
+            }
+        });
     }
 }
