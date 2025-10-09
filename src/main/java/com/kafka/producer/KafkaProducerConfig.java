@@ -60,9 +60,7 @@ public class KafkaProducerConfig {
                         "clientId=\"" + clientId + "\" " +
                         "clientSecret=\"" + clientSecret + "\" " +
                         "scope=\"" + scope + "\" " +
-                        "extension_logicalCluster=\"" + logicalClusterId + "\" " +
-                        "extension_identityPoolId=\"" + identityPoolId + "\";"
-        );
+                        "extension_logicalCluster=\"" + logicalClusterId + ";");
 
         // ===============================
         // Serializadores
@@ -74,10 +72,10 @@ public class KafkaProducerConfig {
         // Schema Registry
         // ===============================
         configProps.put("schema.registry.url", schemaRegistryUrl);
-        configProps.put("bearer.auth.credentials.source", "OAUTHBEARER");
-        configProps.put("bearer.auth.issuer.endpoint.url", tokenEndpointUrl);
-        configProps.put("bearer.auth.client.id", clientId);
-        configProps.put("bearer.auth.client.secret", clientSecret);
+        configProps.put("bearer.auth.credentials.source", "SASL_OAUTHBEARER_INHERIT");
+//        configProps.put("bearer.auth.issuer.endpoint.url", tokenEndpointUrl);
+//        configProps.put("bearer.auth.client.id", clientId);
+//        configProps.put("bearer.auth.client.secret", clientSecret);
         configProps.put("bearer.auth.logical.cluster", logicalClusterId);
         configProps.put("bearer.auth.identity.pool.id", identityPoolId);
 
