@@ -1,20 +1,29 @@
-spring:
-  output:
-    ansi:
-      enabled: ALWAYS   # 🌈 Habilita cores no console
-
-# ============================================================
-# 🔧 Configurações do Aplicativo
-# ============================================================
-app:
-  kafka:
-    topic: pagamentos-topic
-
 # ============================================================
 # 🪵 Logging
 # ============================================================
 logging:
   level:
     root: INFO
-    org.apache.kafka: WARN
+    # Logs mais detalhados para depuração de autenticação OAuth
+    org.apache.kafka: DEBUG
     org.springframework.kafka: DEBUG
+
+# ============================================================
+# 🔧 Configurações do Aplicativo
+# ============================================================
+app:
+  kafka:
+    # O nome do tópico a ser usado pela aplicação
+    topic: kafk-base-componente-spring
+
+# ============================================================
+# 🌸 Spring Boot
+# ============================================================
+spring:
+  output:
+    ansi:
+      enabled: ALWAYS   # 🌈 Habilita cores no console
+
+  # NOTA: O bloco spring.kafka não é mais necessário aqui.
+  # A configuração está centralizada na classe KafkaProducerConfig.java,
+  # que lê as variáveis de ambiente abaixo.

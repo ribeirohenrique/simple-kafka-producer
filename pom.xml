@@ -21,7 +21,7 @@
         <java.version>21</java.version>
         <confluent.version>8.0.0</confluent.version>
         <avro.version>1.12.0</avro.version>
-        <kafka.version>4.1.0</kafka.version>
+        <kafka.version>4.0.0</kafka.version>
     </properties>
 
     <repositories>
@@ -32,7 +32,6 @@
     </repositories>
 
     <dependencies>
-        <!-- Spring Boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
@@ -46,19 +45,14 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka</artifactId>
-            <version>3.3.10</version> <!-- compatível com Kafka Client 5.x -->
-        </dependency>
-
-        <!-- Kafka Client -->
-        <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-clients</artifactId>
             <version>${kafka.version}</version>
         </dependency>
-
-        <!-- Avro / Confluent -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
         <dependency>
             <groupId>io.confluent</groupId>
             <artifactId>kafka-avro-serializer</artifactId>
@@ -69,23 +63,6 @@
             <artifactId>avro</artifactId>
             <version>${avro.version}</version>
         </dependency>
-
-        <!-- OAuth2 / JWT -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-oauth2-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-oauth2-jose</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.bitbucket.b_c</groupId>
-            <artifactId>jose4j</artifactId>
-            <version>0.9.6</version>
-        </dependency>
-
-        <!-- Dev / Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -96,12 +73,10 @@
             <artifactId>spring-kafka-test</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <!-- Dotenv (opcional) -->
         <dependency>
-            <groupId>io.github.cdimascio</groupId>
-            <artifactId>dotenv-java</artifactId>
-            <version>3.2.0</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

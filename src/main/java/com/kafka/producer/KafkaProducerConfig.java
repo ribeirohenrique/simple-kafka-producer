@@ -1,8 +1,11 @@
 package com.kafka.producer;
 
 import com.kafka.producer.model.Pagamento;
+import io.confluent.kafka.schemaregistry.client.SchemaRegistryClientConfig;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
+import io.confluent.kafka.serializers.KafkaAvroSerializerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.config.SaslConfigs;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +16,7 @@ import org.springframework.kafka.core.ProducerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+
 
 @Configuration
 public class KafkaProducerConfig {
@@ -34,6 +38,9 @@ public class KafkaProducerConfig {
 
     @Value("${CONFLUENT_LOGICAL_CLUSTER_ID}")
     private String logicalClusterId;
+
+    @Value("${SCHEMA_REGISTRY_CLUSTER_ID}")
+    private String schemaRegistryClusterId;
 
     @Value("${CONFLUENT_IDENTITY_POOL_ID}")
     private String identityPoolId;
@@ -74,17 +81,20 @@ public class KafkaProducerConfig {
         // Schema Registry
         // ===============================
         configProps.put("schema.registry.url", schemaRegistryUrl);
-        configProps.put("bearer.auth.credentials.source", "OAUTHBEARER");
-        configProps.put("bearer.auth.issuer.endpoint.url", tokenEndpointUrl);
-        configProps.put("bearer.auth.client.id", clientId);
-        configProps.put("bearer.auth.client.secret", clientSecret);
-        configProps.put("bearer.auth.logical.cluster", logicalClusterId);
-        configProps.put("bearer.auth.identity.pool.id", identityPoolId);
+        configProps.put(SchemaRegistryClientConfig.BEARER_AUTH_CREDENTIALS_SOURCE, "SASL_OAUTHBEARER_INHERIT");
+        configProps.put(SchemaRegistryClientConfig.BEARER_AUTH_LOGICAL_CLUSTER, schemaRegistryClusterId);
+        configProps.put(SchemaRegistryClientConfig.BEARER_AUTH_IDENTITY_POOL_ID, identityPoolId);
 
         // ===============================
         // Producer adicional
         // ===============================
+        configProps.put("auto.register.schemas", false);
         configProps.put(ProducerConfig.ACKS_CONFIG, "all");
+        configProps.put(KafkaAvroSerializerConfig.AVRO_REMOVE_JAVA_PROPS_CONFIG, true);
+        configProps.put(SaslConfigs.SASL_LOGIN_CONNECT_TIMEOUT_MS, 10000);
+        configProps.put(SaslConfigs.SASL_LOGIN_READ_TIMEOUT_MS, 10000);
+        configProps.put(SaslConfigs.SASL_LOGIN_RETRY_BACKOFF_MS, 100);
+        configProps.put(SaslConfigs.SASL_LOGIN_RETRY_BACKOFF_MAX_MS, 10000);
         configProps.put(ProducerConfig.RETRIES_CONFIG, 5);
         configProps.put(ProducerConfig.LINGER_MS_CONFIG, 10);
         configProps.put(ProducerConfig.BATCH_SIZE_CONFIG, 32768);
